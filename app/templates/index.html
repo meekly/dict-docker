@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	  <head>
+		    <meta charset="utf-8" />
+		    <title>Flask App Translate Words</title>
+        <link rel="stylesheet" href='/static/css/bootstrap.min.css' />
+        <script type="text/javascript">
+         document.addEventListener('DOMContentLoaded', function() {
+             document.getElementById('button').addEventListener('click', function() {
+                 var word = document.getElementById('word').value
+
+                 fetch('/dict/' + word).then(function(response) {
+                     response.text().then(function(text) {
+                         document.getElementById('translation').innerHTML = text
+                     })
+                 })
+             })
+
+             document.getElementById('button-add-definition').addEventListener('click', function() {
+                 var word = document.getElementById('new-word').value.replaceAll(' ', '')
+                 if (word.length < 1) {
+                     alert('Empty word')
+                     return
+                 }
+
+                 var definition = document.getElementById('definition').value
+                 if (definition.length < 1) {
+                     alert('Empty definition')
+                     return
+                 }
+
+                 fetch('/add/' + word + '/' + definition, {method: 'POST'}).then(function(response) {
+                     response.text().then(function(text) {
+                         alert(text)
+                         document.getElementById('definition').value = ''
+                         document.getElementById('new-word').value = ''
+                     })
+                 })
+             })
+         })
+        </script>
+	  </head>
+	  <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 text-center">
+                    <p>Get definition</p>
+                    <h4>Word</h4>
+                    <input type="text" id="word" />
+                    <br /><br />
+                    <button id="button" class="btn btn-default">Translate!</button>
+                    <br /><br />
+                    <span id="translation"></span>
+                </div>
+                <div class="col-sm-6 text-center">
+                    <p>Add definition</p>
+                    <h4>Word</h4>
+                    <input type="text" id="new-word" />
+                    <h4>Definition</h4>
+                    <input type="text" id="definition" />
+                    <br /><br />
+                    <button id="button-add-definition" class="btn btn-default">Add!</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

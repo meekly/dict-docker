@@ -1,0 +1,15 @@
+identidock:
+  build: .
+  ports:
+   - "5000:5000"
+  volumes:
+    - ./app:/app
+  links:
+    - dict
+    - redis
+
+dict:
+  image: brendanburns/dictionary-server
+
+redis:
+  image: redis:3.0
